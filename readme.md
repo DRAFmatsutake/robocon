@@ -3,26 +3,30 @@
 - [リファレンス](#リファレンス)
 - [ファイル詳細](#ファイル詳細)
 
-## 更新履歴
-- 2021-11-05  プログラムのアップデート
-    - 全体
-        - log吐き出しを#ifdefに変更
-    - moter
-        - 時限関数の実装
-        - 打ち出しの戻り値の変更
-        - 停止の追加
-    - com
-        - タイマーの実装
+# 更新履歴
+<details><summary>2021-11-05  プログラムのアップデート</summary><div>
 
-- 2021-10-27  readme作成
-    - moter
-        - モーターの打ち出し部関数作成
-    - com
-        - マニュアル用の定数の定義
-    - robot
-        - マニュアル時の打ち出し実装
+- 全体
+    - log吐き出しを#ifdefに変更
+- moter
+    - 時限関数の実装
+    - 打ち出しの戻り値の変更
+    - 停止の追加
+- com
+    - タイマーの実装
 
-## 動作処理用リファレンス
+</div></details>
+<details><summary>2021-10-27  readme作成</summary><div>
+
+- moter
+    - モーターの打ち出し部関数作成
+- com
+    - マニュアル用の定数の定義
+- robot
+    - マニュアル時の打ち出し実装
+</div></details>
+
+# 動作処理用リファレンス
 - 基本的には robot.cpp 内の Run関数(動作処理) , State関数(状態処理) 内で処理の記述を行う
 
 <details><summary>main関数</summary><div>
@@ -80,14 +84,14 @@ int Robot::Run(void){
 
 </div></details>
 
-### Run関数
+## Run関数
     - main文から呼ばれる関数、ロボットの制御を行う
     - State関数にて状態遷移を決定しそれをもとに switch にて処理を実行する
     - 基本的にはswitch文内を書き換えればよい
-### State関数
+## State関数
     - 現在の状態を確定する、確定した状態を元にRun関数にて処理を行う
     - 確定した状態をenumで定義した定数としてreturnする
-### 基本
+## 基本
 <table border="1">
     <tr>
         <td>enum STATE</td>
@@ -112,7 +116,7 @@ int Robot::Run(void){
     </tr>
 </table>
 
-### タイヤ
+## タイヤ
 <table border="1">
     <tr>
         <td>void Wheel(char left,char right)</td>
@@ -172,7 +176,7 @@ int Robot::Run(void){
     </tr>
 </table>
 
-### アーム
+## アーム
 <table border="1">
     <tr>
         <td>int SetArm(char value)</td>
@@ -196,23 +200,23 @@ int Robot::Run(void){
     </tr>
 </table>
 
-## ファイル詳細
-    - main.cpp
-        メイン処理
-    - robot
-        ロボット上でのメイン　ここに処理を書く
-    - com (commonの意)
-        便利そうな関数やdefineを記載
-    - moter
-        モーター制御をクラス化したもの
-    - serial
-        arduinoとのシリアル通信用
+# ファイル詳細
+- main.cpp
+    - メイン処理
+- robot
+    - ロボット上でのメイン　ここに処理を書く
+- com (commonの意)
+    - 便利そうな関数やdefineを記載
+- moter
+    - モーター制御をクラス化したもの
+- serial
+    - arduinoとのシリアル通信用
 
 
-    - _*.out
-        コンパイルされた実行ファイル
-    - makefile
-        コンパイル設定ファイル
-    - test_*.cpp
-        各クラスの動作確認用に制作したもの
-        ご自由にお使いください
+- _*.out
+    - コンパイルされた実行ファイル
+- makefile
+    - コンパイル設定ファイル
+- test_*.cpp
+    - 各クラスの動作確認用に制作したもの
+    - ご自由にお使いください
