@@ -23,6 +23,95 @@
         - マニュアル時の打ち出し実装
 
 ## 動作処理用リファレンス
+- 基本的には robot.cpp 内の Run関数(動作処理) , State関数(状態処理) 内で処理の記述を行う
+
+<details><summary>main関数</summary><div>
+
+```c++
+int main(void){
+    Robot robot;
+    robot.Init();
+    while(robot.Run()==0);
+    robot.Deinit();
+    sleep(3);
+    return 0;
+}
+```
+
+</div></details>
+
+<details><summary>Run関数</summary><div>
+
+```c++
+int Robot::Run(void){
+
+   moter.Update();
+
+    if(R_MANUAL){
+        return Manual();
+    }
+    else{
+        switch (state=State())
+        {
+            case EXIT:    //終了
+                return 1;
+                break;
+            case BALL_SEARCH:   //ボールを探す
+                break;
+            case BALL_FOCUS:    //ボールの方向へ向く
+                break;
+            case BALL_MOVE:     //ボールへ向かう
+                break;
+            case POLE_SEARCH:   //ポールを探す
+                break;
+            case SHOT_PREPARE:  //ポールの方向を向く
+                break;
+            case SHOT_AFTER:    //打ち出し＆後処理
+                break;      
+            default:
+                return -1;
+                break;
+        }
+        state_pre=state;
+    }
+   return 0;
+}
+```
+
+</div></details>
+
+### Run関数
+    - main文から呼ばれる関数、ロボットの制御を行う
+    - State関数にて状態遷移を決定しそれをもとに switch にて処理を実行する
+    - 基本的にはswitch文内を書き換えればよい
+### State関数
+    - 現在の状態を確定する、確定した状態を元にRun関数にて処理を行う
+    - 確定した状態をenumで定義した定数としてreturnする
+### 基本
+<table border="1">
+    <tr>
+        <td>enum STATE</td>
+        <td>状態のリスト<br>ここを書き換え状態を管理する</td>
+    </tr>
+    <tr>
+        <td>void Manual(void)</td>
+        <td><details><summary>マニュアル処理を行う</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>無し<br><br>
+            <b>解説：</b>マニュアル制御用の処理<br>
+            com.h内のdefineされたmanual設定をtrueにすると実行される<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td>int Setup(void)</td>
+        <td><details><summary>状態遷移後の初回セットアップ処理</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>初回:1 2回目以降:0<br><br>
+            <b>解説：</b>状態が変わった時に1度目のループでのみ1が変える<br>
+        </details></td>
+    </tr>
+</table>
+
 ### タイヤ
 <table border="1">
     <tr>
