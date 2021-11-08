@@ -47,7 +47,7 @@ int Serial::Open(const char* device,int baud){
 }
 
 void Serial::Close(void){
-	if(fd!=-1){
+	if(0<=fd){
 		std::cout<<"close serial port"<<std::endl;
 		serialClose(fd);
 		fd=-1;
