@@ -1,15 +1,17 @@
 #pragma once
 #include "moter.h"
+#include "camera.h"
 
 class Robot{
     public:
         Robot(void);
-        ~Robot(void);
+        ~Robot();
         void Init(void);
         void Deinit(void);
         int Run(void);
     private:
-        Moter moter;
+        Moter *moter;
+        Camera *cam1,*cam2;
         int Manual(void);   //manual mode function
 
         //state buff

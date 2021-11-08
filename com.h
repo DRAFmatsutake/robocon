@@ -1,9 +1,5 @@
 #pragma once
 
-#define R_REDU true //redundancy
-#define R_DEBUG true //debug mode
-#define R_MANUAL true //manual mode
-
 namespace Func{
 	//no wait key input
 	char KeyState(void);
