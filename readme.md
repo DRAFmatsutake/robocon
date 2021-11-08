@@ -6,6 +6,14 @@
 # 更新履歴
 <details><summary>2021-11-08  プログラムのアップデート</summary><div>
 
+- camera
+    - カメラの追加
+- com
+    - define の消去
+
+</div></details>
+<details><summary>2021-11-08  プログラムのアップデート</summary><div>
+
 - robot
     - 処理実装部を別ファイルに切り分け
 - serial
@@ -102,7 +110,7 @@ int Robot::State(void){
             <b>引数　:</b>無し<br>
             <b>戻り値:</b>無し<br><br>
             <b>解説：</b>マニュアル制御用の処理<br>
-            com.h内のdefineされたmanual設定をtrueにすると実行される<br>
+            robot.cpp内でMODE_MANUALをdefineすると実行される<br>
         </details></td>
     </tr>
 </table>
@@ -204,6 +212,8 @@ int Robot::State(void){
     - モーター制御をクラス化したもの
 - serial
     - arduinoとのシリアル通信用
+- serial
+    - カメラの制御をクラス化したもの
 
 
 - _*.out
