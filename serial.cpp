@@ -1,7 +1,7 @@
 #include <wiringSerial.h>
 #include <wiringPi.h>
 #include <iostream>
-#include <unistd.h>     // sleep()関数を使うのに必要
+#include <unistd.h>     // sleep()
 #include "serial.h"
 #include "com.h"
 
@@ -55,6 +55,8 @@ void Serial::Close(void){
 }
 
 void Serial::Send(char *data){
+	if(fd<0)
+		return;
 	serialPutchar(fd,header);
 		#ifdef SERIAL_LOG
 			printf("send:%x ",header);
@@ -70,8 +72,9 @@ void Serial::Send(char *data){
 		#endif
 	}
 	serialPutchar(fd,footer);
-	if(R_REDU)
-		printf("%x\n",footer);
+	#ifdef SERIAL_LOG
+		printf("%x\n",footer);;
+	#endif
 }
 
 int Serial::Read(char *data){
@@ -130,6 +133,8 @@ void Serial::Encode(char in,char *tout,char *bout){
 
 void Serial::Update(void){
 	char c;
+	if(fd<0)
+		return;
 	while(0!=serialDataAvail(fd)){
 		c=serialGetchar(fd);
 		#ifdef SERIAL_LOG

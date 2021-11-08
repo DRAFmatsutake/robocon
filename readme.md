@@ -4,6 +4,14 @@
 - [ファイル詳細](#ファイル詳細)
 
 # 更新履歴
+<details><summary>2021-11-08  プログラムのアップデート</summary><div>
+
+- robot
+    - 処理実装部を別ファイルに切り分け
+- serial
+    - シリアルUSBを抜いた状態でフリーズするバグ回避
+
+</div></details>
 <details><summary>2021-11-05  プログラムのアップデート</summary><div>
 
 - 全体
@@ -27,67 +35,50 @@
 </div></details>
 
 # 動作処理用リファレンス
-- 基本的には robot.cpp 内の Run関数(動作処理) , State関数(状態処理) 内で処理の記述を行う
+- 基本的には main_proc.cpp 内の MainProc関数(動作処理) , State関数(状態処理) 内で処理の記述を行う
 
-<details><summary>main関数</summary><div>
-
-```c++
-int main(void){
-    Robot robot;
-    robot.Init();
-    while(robot.Run()==0);
-    robot.Deinit();
-    sleep(3);
-    return 0;
-}
-```
-
-</div></details>
-
-<details><summary>Run関数</summary><div>
+<details><summary>main_proc.cpp</summary><div>
 
 ```c++
-int Robot::Run(void){
-
-   moter.Update();
-
-    if(R_MANUAL){
-        return Manual();
-    }
-    else{
+int Robot::MainProc(void){
+    
         switch (state=State())
         {
-            case EXIT:    //終了
+            case EXIT:    
                 return 1;
                 break;
-            case BALL_SEARCH:   //ボールを探す
+            case BALL_SEARCH:   
                 break;
-            case BALL_FOCUS:    //ボールの方向へ向く
+            case BALL_FOCUS:    
                 break;
-            case BALL_MOVE:     //ボールへ向かう
+            case BALL_MOVE:     
                 break;
-            case POLE_SEARCH:   //ポールを探す
+            case POLE_SEARCH:   
                 break;
-            case SHOT_PREPARE:  //ポールの方向を向く
+            case SHOT_PREPARE:  
                 break;
-            case SHOT_AFTER:    //打ち出し＆後処理
+            case SHOT_AFTER:    
                 break;      
             default:
                 return -1;
                 break;
         }
-        state_pre=state;
-    }
-   return 0;
+        return 0;
+}
+
+
+int Robot::State(void){
+    return EXIT;
 }
 ```
 
 </div></details>
 
-## Run関数
+## MainProc関数
 - main文から呼ばれる関数、ロボットの制御を行う
 - State関数にて状態遷移を決定しそれをもとに switch にて処理を実行する
 - 基本的にはswitch文内を書き換えればよい
+- 戻り値として　ループ：0、終了：1、エラー：‐1
 ## State関数
 - 現在の状態を確定する、確定した状態を元にRun関数にて処理を行う
 - 確定した状態をenumで定義した定数としてreturnする
@@ -98,20 +89,20 @@ int Robot::Run(void){
         <td>状態のリスト<br>ここを書き換え状態を管理する</td>
     </tr>
     <tr>
+        <td>int Setup(void)</td>
+        <td><details><summary>状態遷移後の初回セットアップ処理</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>初回:1 2回目以降:0<br><br>
+            <b>解説：</b>状態が変わった時に1度目のループでのみ1が変える<br>
+        </details></td>
+    </tr>
+    <tr>
         <td>void Manual(void)</td>
         <td><details><summary>マニュアル処理を行う</summary>
             <b>引数　:</b>無し<br>
             <b>戻り値:</b>無し<br><br>
             <b>解説：</b>マニュアル制御用の処理<br>
             com.h内のdefineされたmanual設定をtrueにすると実行される<br>
-        </details></td>
-    </tr>
-    <tr>
-        <td>int Setup(void)</td>
-        <td><details><summary>状態遷移後の初回セットアップ処理</summary>
-            <b>引数　:</b>無し<br>
-            <b>戻り値:</b>初回:1 2回目以降:0<br><br>
-            <b>解説：</b>状態が変わった時に1度目のループでのみ1が変える<br>
         </details></td>
     </tr>
 </table>
@@ -203,6 +194,8 @@ int Robot::Run(void){
 # ファイル詳細
 - main.cpp
     - メイン処理
+- main_proc.cpp
+    - メイン処理の実装
 - robot
     - ロボット上でのメイン　ここに処理を書く
 - com (commonの意)

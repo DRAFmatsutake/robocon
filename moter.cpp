@@ -1,22 +1,22 @@
 #include <stdio.h>
-#include <unistd.h>     // sleep()関数を使うのに必要
+#include <unistd.h>     // sleep()
 #include "serial.h"
 #include "moter.h"
 #include "com.h"
 
 //#define MOTER_SET_LOG
-#define MOTER_SERIAL_RECEIVE_LOG
+//#define MOTER_SERIAL_RECEIVE_LOG
 
 Moter::Moter(){
-		//シリアル通信
+		//serial connect
 		sr=new Serial(2,4,'@','$');
 		sr->SetRingSize(5);
 		sr->Open("/dev/ttyACM0",9600);
 		//sr->Open("/dev/USB0",9600);
 }
 Moter::~Moter(){
-		sr->Close();
-		delete(sr);
+	sr->Close();
+	delete(sr);
 }
 
 void Moter::Wheel(char left,char right){

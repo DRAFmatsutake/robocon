@@ -7,7 +7,7 @@ Robot::Robot(void){
     state_pre=-1;
 }
 
-Robot::~Robot(){}
+Robot::~Robot(void){}
 
 void Robot::Init(void){
     if(R_REDU)
@@ -27,42 +27,19 @@ int Robot::Setup(){
 }
 
 int Robot::Run(void){
-
-   moter.Update();
+    int r_value = 0;
+    moter.Update();
 
     if(R_MANUAL){
-        return Manual();
+        r_value = Manual();
     }
     else{
-        switch (state=State())
-        {
-            case EXIT:    //終了
-                return 1;
-                break;
-            case BALL_SEARCH:   //ボールを探す
-                break;
-            case BALL_FOCUS:    //ボールの方向へ向く
-                break;
-            case BALL_MOVE:     //ボールへ向かう
-                break;
-            case POLE_SEARCH:   //ポールを探す
-                break;
-            case SHOT_PREPARE:  //ポールの方向を向く
-                break;
-            case SHOT_AFTER:    //打ち出し＆後処理
-                break;      
-            default:
-                return -1;
-                break;
-        }
-        state_pre=state;
+        r_value = MainProc();
+        state_pre = state;
     }
-   return 0;
+   return r_value;
 }
 
-int Robot::State(void){
-    return EXIT;
-}
 
 int Robot::Manual(void){
     char c;
