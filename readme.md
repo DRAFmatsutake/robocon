@@ -4,6 +4,13 @@
 - [ファイル詳細](#ファイル詳細)
 
 # 更新履歴
+<details><summary>2021-11-09  ボール検知クラスの事前準備</summary><div>
+
+- ballFinder
+- リファレンス
+    - 関数の参照の追加
+
+</div></details>
 <details><summary>2021-11-08  プログラムのアップデート</summary><div>
 
 - camera
@@ -118,7 +125,7 @@ int Robot::State(void){
 ## タイヤ
 <table border="1">
     <tr>
-        <td>void Wheel(char left,char right)</td>
+        <td>void moter->Wheel(char left,char right)</td>
         <td><details><summary>両モーターの動作設定</summary>
             <b>引数　:</b>left,right : それぞれのモーターの回転量<br>
             <b>戻り値:</b>無し<br><br>
@@ -128,7 +135,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>void TimerWheel(char left,char right,int time)</td>
+        <td>void moter->TimerWheel(char left,char right,int time)</td>
         <td><details><summary>モーターを一定時間動作させる</summary>
             <b>引数　:</b>left,right : それぞれのモーターの回転量<br>
                         time : 動作時間[ms]<br>
@@ -139,7 +146,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>void WheelStop(void)</td>
+        <td>void moter->WheelStop(void)</td>
         <td><details><summary>モーターを停止させる</summary>
             <b>引数　:</b>無し<br>
             <b>戻り値:</b>無し<br><br>
@@ -147,7 +154,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>void TimerStop(void)</td>
+        <td>void moter->TimerStop(void)</td>
         <td><details><summary>TimerWheel() を中断し上書きを許可する</summary>
             <b>引数　:</b>無し<br>
             <b>戻り値:</b>無し<br><br>
@@ -156,7 +163,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>void WheelRight(char value)</td>
+        <td>void moter->WheelRight(char value)</td>
         <td><details><summary>右モーターにのみ指令を送る</summary>
             <b>引数　:</b>value :　回転量<br>
             <b>戻り値:</b>無し<br><br>
@@ -166,7 +173,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>void WheelLeft (char value)</td>
+        <td>void moter->WheelLeft (char value)</td>
         <td><details><summary>左モーターにのみ指令を送る</summary>
             <b>引数　:</b>value :　回転量<br>
             <b>戻り値:</b>無し<br><br>
@@ -178,7 +185,7 @@ int Robot::State(void){
 ## アーム
 <table border="1">
     <tr>
-        <td>int SetArm(char value)</td>
+        <td>int moter->SetArm(char value)</td>
         <td><details><summary>アームを持ち上げる</summary>
             <b>引数　:</b>value : digree<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -188,13 +195,61 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td>int ArmShot(void)</td>
+        <td>int moter->ArmShot(void)</td>
         <td><details><summary>打ち出しを行う</summary>
             <b>引数　:</b>無し<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
             <b>解説：</b>打ち出しアクションを実行する<br>
             持ち上がったアームを解放しボールを打ち出す<br>
             アームが持ち上がり切っていない場合等に失敗(0)が返される<br>
+        </details></td>
+    </tr>
+</table>
+
+## 検知
+<table border="1">
+    <tr>
+        <td><s>int pf->GetDistance(int* value)<s></td>
+        <td><details><summary>ボール距離の取得</summary>
+            <b>引数　:</b>value : 変数のポインタ[mm]<br>
+            <b>戻り値:</b>成功:1 失敗:0<br><br>
+            <b>解説：</b>ボールの直線距離の取得<br>
+            カメラに映る範囲で得られた値[mm]の単位で引数ポインタに代入する<br>
+            ロボットのローカルでの正面を正とする<br>
+            ボールが見つからないあった場合等は0を返す<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td><s>int pf->GetDegree(int* value)<s></td>
+        <td><details><summary>ボール方向の取得</summary>
+            <b>引数　:</b>value : 変数のポインタ[degree]<br>
+            <b>戻り値:</b>成功:1 失敗:0<br><br>
+            <b>解説：</b>ボールの方向の取得<br>
+            カメラに映る範囲で得られた値を -180° ~ 180° で引数ポインタに代入する<br>
+            ロボットのローカルでの正面を0°とし時計回りを正とする<br>
+            ボールが見つからないあった場合等は0を返す<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td><s>int bf->GetDistance(int* value)<s></td>
+        <td><details><summary>ポール距離の取得</summary>
+            <b>引数　:</b>value : 変数のポインタ[mm]<br>
+            <b>戻り値:</b>成功:1 失敗:0<br><br>
+            <b>解説：</b>ポールの直線距離の取得<br>
+            カメラに映る範囲で得られた値[mm]の単位で引数ポインタに代入する<br>
+            ロボットのローカルでの正面を正とする<br>
+            ボールが見つからないあった場合等は0を返す<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td><s>int bf->GetDegree(int* value)<s></td>
+        <td><details><summary>ポール方向の取得</summary>
+            <b>引数　:</b>value : 変数のポインタ[degree]<br>
+            <b>戻り値:</b>成功:1 失敗:0<br><br>
+            <b>解説：</b>ボールの方向の取得<br>
+            カメラに映る範囲で得られた値を -180° ~ 180° で引数ポインタに代入する<br>
+            ロボットのローカルでの正面を0°とし時計回りを正とする<br>
+            ボールが見つからないあった場合等は0を返す<br>
         </details></td>
     </tr>
 </table>
