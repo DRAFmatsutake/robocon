@@ -1,6 +1,7 @@
 #pragma once
 #include "moter.h"
 #include "camera.h"
+#include "ballFinder.h"
 
 class Robot{
     public:
@@ -11,8 +12,17 @@ class Robot{
         int Run(void);
     private:
         Moter *moter;
-        Camera *cam1,*cam2;
+        Camera *cam,*cam1,*cam2;
+        BallFinder *bf,*bf1,*bf2;
         int Manual(void);   //manual mode function
+
+        //camera
+        enum CAMERA_ID{
+            CAM_1,CAM_2
+        };
+        int now_cam;
+        int NowCam(void);
+        void ChangeCam(int cam_id);
 
         //state buff
         int state;

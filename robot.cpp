@@ -7,6 +7,7 @@
 Robot::Robot(void){
     state=1;
     state_pre=-1;
+    now_cam=CAM_1;
 }
 
 Robot::~Robot(){}
@@ -16,8 +17,13 @@ void Robot::Init(void){
     moter=new Moter();
     cam1=new Camera();
     cam2=new Camera();
+    //raspberry
     cam1->Open(0);
+    //elecom
     cam2->Open(2);
+    bf1=new BallFinder(cam1,5,0,0,0);
+    bf2=new BallFinder(cam2,13,0,0,0);
+    ChangeCam(now_cam);
     moter->Wheel(0,0);
     printf("robot ready\n");
 }
@@ -25,6 +31,8 @@ void Robot::Deinit(void){
     moter->Wheel(0,0);
     printf("\nrobot deinit\n");
     delete(moter);
+    delete(bf1);
+    delete(bf2);
     delete(cam1);
     delete(cam2);
 }
@@ -38,8 +46,8 @@ int Robot::Setup(){
 int Robot::Run(void){
     int r_value = 0;
     moter->Update();
-    cam1->Update();
-    cam2->Update();
+    cam->Update();
+    bf->Update();
 
     #ifdef MODE_MANUAL
         r_value = Manual();
@@ -82,13 +90,38 @@ int Robot::Manual(void){
         moter->TimerWheel(-90,0,1200);
     }
     else if(c=='c'){
-        cam1->Capture();
+        ChangeCam(NowCam()!=CAM_1?CAM_1:CAM_2);
     }
     else if(c=='v'){
-        cam2->Capture();
+        cam->Capture();
     }
     else if(c=='q'){
         return 1;
     }
     return 0;
+}
+
+int Robot::NowCam(void){
+    return now_cam;
+}
+
+
+void Robot::ChangeCam(int cam_id){
+    switch (cam_id)
+    {
+    case CAM_1:
+            printf("use cam1\n");
+            now_cam=cam_id;
+            cam=cam1;
+            bf=bf1;
+        break;
+    case CAM_2:
+            printf("use cam2\n");
+            now_cam=cam_id;
+            cam=cam2;
+            bf=bf2;
+        break;
+    default:
+        break;
+    }
 }
