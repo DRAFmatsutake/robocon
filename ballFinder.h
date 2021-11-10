@@ -56,7 +56,7 @@ private:
 
     //function
     cv::Mat redfilter(Mat r_dst);
-    cd::Mat ball_mask(Mat c_Gray);
+    cv::Mat ball_mask(Mat c_Gray);
     double Calc_dis(Mat c_Gray);
     double Calc_rad(Mat c_Gray);
 };

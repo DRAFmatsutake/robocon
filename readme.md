@@ -206,6 +206,36 @@ int Robot::State(void){
         </details></td>
     </tr>
 </table>
+## カメラ
+<table border="1">
+    <tr>
+        <td>enum CAMERA_ID</td>
+        <td><details><summary>カメラの番号</summary>
+            <b>解説：</b>プログラムで割り振られたカメラ番号<br>
+            2台使用するためCAM_1かCAM_2となる<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td>int NowCam(void)</td>
+        <td><details><summary>現在使用しているカメラの取得</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>enum CAMERA_ID : カメラ番号<br><br>
+            <b>解説：</b>現在使用しているカメラの取得<br>
+            現在使用してるカメラを取得できる<br>
+            戻り値はrobotクラス内で宣言されたenum CAMERA_IDとなる<br>
+        </details></td>
+    </tr>
+    <tr>
+        <td>void ChangeCam(int cam_id)</td>
+        <td><details><summary>使用するカメラの切り替え</summary>
+            <b>引数　:</b>enum CAMERA_ID : カメラ番号<br>
+            <b>戻り値:</b>なし<br><br>
+            <b>解説：</b>使用するカメラを切り替える<br>
+            指定されたカメラに切り替える、同じ場合は切り替わらない<br>
+            例外的な数値だった場合は無視される<br>
+        </details></td>
+    </tr>
+</table>
 
 ## 検知
 <table border="1">
