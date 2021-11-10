@@ -47,11 +47,11 @@ int Robot::Run(void){
     int r_value = 0;
     moter->Update();
     cam->Update();
-    bf->Update();
 
     #ifdef MODE_MANUAL
         r_value = Manual();
     #else
+        bf->Update();
         r_value = MainProc();
         state_pre = state;
     #endif

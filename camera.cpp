@@ -13,8 +13,14 @@ int Camera::Open(int device){
         return -1;
     }
 	//camera resize
-	cam.set(3,cam.get(3)/2);	//width
-	cam.set(4,cam.get(4)/2);	//height
+	cam.set(cv::CAP_PROP_FRAME_WIDTH,640);
+	cam.set(cv::CAP_PROP_FRAME_HEIGHT,480);
+	cam.set(cv::CAP_PROP_BRIGHTNESS ,50);
+	cam.set(cv::CAP_PROP_CONTRAST ,50);
+	cam.set(cv::CAP_PROP_SATURATION,0);
+	cam.set(cv::CAP_PROP_HUE,0);
+	cam.set(cv::CAP_PROP_EXPOSURE,100);
+	cam.set(cv::CAP_PROP_FPS,30);
 	printf("camera open success(device: %d )\n",device);
 	return 0;
 }
