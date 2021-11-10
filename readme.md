@@ -206,6 +206,7 @@ int Robot::State(void){
         </details></td>
     </tr>
 </table>
+
 ## ƒJƒƒ‰
 <table border="1">
     <tr>
