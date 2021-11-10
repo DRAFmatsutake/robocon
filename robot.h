@@ -15,6 +15,7 @@ class Robot{
         Camera *cam,*cam1,*cam2;
         BallFinder *bf,*bf1,*bf2;
         int Manual(void);   //manual mode function
+        int Debug(void);
 
         //camera
         enum CAMERA_ID{
@@ -33,9 +34,18 @@ class Robot{
         enum STATE{
             EXIT=-1,
             BALL_SEARCH,BALL_FOCUS,BALL_MOVE,
-            POLE_SEARCH,SHOT_PREPARE,SHOT_AFTER
+            POLE_SEARCH,POLE_FOCUS,SHOT_PREPARE,SHOT_AFTER
         };
         int MainProc(void);
         int State(void);    //decidion state
+
+        //use in main_proc
+        int ball_deg;
+        int ball_dist;
+        int pole_deg;
+        int pole_dist;
+        int cam2_ball_deg_range;
+        int cam2_pole_deg_range;
+        int cam1_ball_dist_range;
 };
 

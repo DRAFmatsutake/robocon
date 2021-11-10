@@ -4,13 +4,18 @@
 #include <unistd.h>     // sleep()
 #include <iostream>
 #include <sys/sysinfo.h>
+#include <wiringPi.h>
 
-#define MODE_MANUAL
+//#define MODE_DEBUG
+//#define MODE_MANUAL
 
 Robot::Robot(void){
-    state=1;
+    state=0;
     state_pre=-1;
-    now_cam=CAM_1;
+    now_cam=CAM_2;
+    cam2_ball_deg_range=15;
+    cam2_pole_deg_range=10;
+    cam1_ball_dist_range=5;
 }
 
 Robot::~Robot(){}
@@ -23,11 +28,13 @@ void Robot::Init(void){
     //raspberry
     cam1->Open(0);
     //elecom
-    cam2->Open(1);
-    bf1=new BallFinder(cam1,5,0,0,0);
-    bf2=new BallFinder(cam2,13,0,0,0);
+    if(cam2->Open(1)==-1)
+        cam2->Open(2);
+    bf1=new BallFinder(cam1,5,230,0,70);
+    bf2=new BallFinder(cam2,13,250,3,11);
     ChangeCam(now_cam);
     moter->Wheel(0,0);
+    pinMode(4,INPUT);
     printf("robot ready\n");
 }
 void Robot::Deinit(void){
@@ -51,12 +58,21 @@ int Robot::Run(void){
     moter->Update();
     cam->Update();
 
+    #ifdef MODE_DEBUG
+        Debug();
+    #endif
+
     #ifdef MODE_MANUAL
+    #ifndef MODE_DEBUG
         r_value = Manual();
-    #else
+    #endif
+    #endif
+    #ifndef MODE_MANUAL
+    #ifndef MODE_DEBUG
         bf->Update();
         r_value = MainProc();
         state_pre = state;
+    #endif
     #endif
     /*memory check
     {
@@ -65,7 +81,19 @@ int Robot::Run(void){
         std::cout << meminfo.freeram <<"/"<< meminfo.totalram <<std::endl;
     }
     */
+   if(digitalRead(4)==1)
+        r_value=1;
    return r_value;
+}
+
+int Robot::Debug(void){
+    bf->Update();
+    int a=-1,b=-1;
+    bf->GetDegree(&a);
+    bf->GetDistance(&b);
+    printf("%d %d \n",a,b);
+    //cam->Show("cam");
+    return 0;
 }
 
 
@@ -120,13 +148,11 @@ void Robot::ChangeCam(int cam_id){
     switch (cam_id)
     {
     case CAM_1:
-            printf("use cam1\n");
             now_cam=cam_id;
             cam=cam1;
             bf=bf1;
         break;
     case CAM_2:
-            printf("use cam2\n");
             now_cam=cam_id;
             cam=cam2;
             bf=bf2;

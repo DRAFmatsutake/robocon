@@ -25,7 +25,7 @@ private:
     Camera *cp;
     int height_distance;
     int depth_distance;
-    float camera_radian;
+    double camera_radian;
 
     double distance;
     float radian;
@@ -33,7 +33,7 @@ private:
     int param;
     int status;
 
-    void SetBallPos(int _x,int _y,int _dis);
+    int SetBallPos(int _x,int _y,int _dis);
 
     //---------------------------
     //matrix

@@ -41,18 +41,19 @@ BallFinder::~BallFinder()
 int BallFinder::GetDegree(int *pvalue){
     if(status==-1)
         return 0;
-    (*pvalue) = radian/3.14f*180.0f;
+    (*pvalue) = (int)(radian/3.14f*180.0f);
     return 1;
 }
 int BallFinder::GetDistance(int *pvalue){
     if(status==-1)
         return 0;
-    (*pvalue) = distance;
+    (*pvalue) = (int)distance;
     return 1;
 }
 
 void BallFinder::Update(void){
-    red = redfilter(cp->frame);
+    cv::Mat _frame=(cp->frame).clone();
+    red = redfilter(_frame);
     cv::cvtColor(red,Gray,6);
     //--------- 2021.11.09 additional part -----------
     threshold(Gray,thresh,0,255,THRESH_BINARY);
@@ -71,14 +72,25 @@ void BallFinder::Update(void){
 //-------------------------------------------------------------------------------------------------------------------
 //x left:+ right:-
 //y up:- down:+
-void BallFinder::SetBallPos(int _x,int _y,int _dis){
-    if(camera_radian<1.57){
-        distance=_dis*cos(camera_radian);
-        radian = (_x/abs(_x))*asin(_x/distance);
+int BallFinder::SetBallPos(int _x,int _y,int _dis){
+        _x*=10;
+        _y*=10;
+        _dis*=10;
+    if(abs(camera_radian)<0.785){
+        distance=(double)_dis*cos(camera_radian);
+        double val=(double)_x/distance;
+        if(abs(val)>1){
+                return -1;
+        }
+        radian = (float)asin(val);
     }
     else{
+        _y=_y*cos(camera_radian);
         distance=sqrt(_x*_x+_y*_y);
-        radian = atan2(-_y,-_x);
+        if(_y==0&&_x==0)
+                radian=0;
+        else
+                radian = atan2(_y,-_x);
     }
     //hosei
     int _,__;
@@ -87,6 +99,7 @@ void BallFinder::SetBallPos(int _x,int _y,int _dis){
     __-=depth_distance;
     distance=sqrt(_*_+__*__);
     radian=atan2(_,__);
+    return 0;
 }
 
 
@@ -105,6 +118,48 @@ cv::Mat BallFinder::redfilter(Mat _r_dst)
         
         return _Red;
 }
+double BallFinder::Calc_rad(Mat c_Gray)
+{
+        std::vector<cv::Vec3f> circles;
+        cv::HoughCircles(c_Gray, circles, cv::HOUGH_GRADIENT,1, c_Gray.rows/2, b_canny, b_sens,b_min,b_max);
+        if(circles.size() == 0)
+        {
+                //printf("Error1_CAM%d \n",cam_no);
+                return -1;
+        }
+        //else if(circles.size() > 1)
+        //{
+                //printf("Error2_CAM%d \n",cam_no);
+                //return -1;
+        //}
+        else //if(circles.size() == 2)
+        {
+                cv::Point center((int)circles[0][0], (int)circles[0][1]);
+                //cv::Point center2(340, 240);
+                int radius = (int)circles[0][2];
+                
+                cv::circle(c_Gray, center, radius, cv::Scalar(255, 0, 0), 2);
+                //cv::circle(c_Gray, center2, 5, cv::Scalar(255, 0, 0), 2);
+                //std::cout << radius <<std::endl;
+                //std::cout << center <<std::endl;
+                double sum = param/radius;
+                //std::cout<< std::fixed << "CAM" <<"-distance:" << sum << std::endl;
+                //imshow("Result",c_Gray);
+                int x= (int)circles[0][0];
+                x = (x-320)/10;
+                int y= (int)circles[0][1];
+                y = (y-240)/10;
+                //printf("X-GAP:%d\n",x);
+                double _sin = x/sum;
+                //std::cout<<"sin::"<< sin << std::endl;
+                double dig = asin(_sin)*90;
+                //std::cout<<"radian::"<< dig << std::endl;
+                //return dig;
+                return SetBallPos(x,y,sum);
+        }
+        return -1;
+}
+
 
 double BallFinder::Calc_dis(Mat c_Gray)
 {       
@@ -135,50 +190,6 @@ double BallFinder::Calc_dis(Mat c_Gray)
         }
         return -1;
         
-}
-
-double BallFinder::Calc_rad(Mat c_Gray)
-{
-        std::vector<cv::Vec3f> circles;
-        cv::HoughCircles(c_Gray, circles, cv::HOUGH_GRADIENT,1, c_Gray.rows/2, b_canny, b_sens,b_min,b_max);
-        if(circles.size() == 0)
-        {
-                //printf("Error1_CAM%d \n",cam_no);
-                return -1;
-        }
-        //else if(circles.size() > 1)
-        //{
-                //printf("Error2_CAM%d \n",cam_no);
-                //return -1;
-        //}
-        else //if(circles.size() == 2)
-        {
-                cv::Point center((int)circles[0][0], (int)circles[0][1]);
-                //cv::Point center2(340, 240);
-                int radius = (int)circles[0][2];
-                
-                cv::circle(c_Gray, center, radius, cv::Scalar(255, 0, 0), 2);
-                //cv::circle(c_Gray, center2, 5, cv::Scalar(255, 0, 0), 2);
-                //std::cout << radius <<std::endl;
-                //std::cout << center <<std::endl;
-                double sum = param/radius;
-                //std::cout<< std::fixed << "CAM" <<"-distance:" << sum << std::endl;
-                //imshow("Result",c_Gray);
-                int x= (int)circles[0][0];
-                x = (abs(x-320))/10;
-                int y= (int)circles[0][1];
-                y = (abs(y-240))/10;
-                //printf("X-GAP:%d\n",x);
-                double sin = x/sum;
-                //std::cout<<"sin::"<< sin << std::endl;
-                double dig = asin(sin)*90;
-                //std::cout<<"radian::"<< dig << std::endl;
-                //return dig;
-                SetBallPos(x,y,sum);
-
-                return 0;
-        }
-        return -1;
 }
 
 cv::Mat BallFinder::ball_mask(Mat c_Gray) //make no-ball image

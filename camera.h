@@ -14,9 +14,10 @@ class Camera{
 		~Camera();
 		int Open(int device);
 		void Close();
-		void Show(char *windowName);
+		void Show(const char *windowName);
 		void Update();
 		void Capture();
+		void Capture(const char *path);
 		cv::Mat frame;
 		
 	private:	
