@@ -101,7 +101,7 @@ cv::Mat BallFinder::redfilter(Mat _r_dst)
         inRange(_hsv, s_min, s_max, _mask);
         inRange(_hsv, s_min2, s_max2, _mask2);
         _mask3 = _mask + _mask2;
-        r_dst.copyTo(_Red, _mask3);
+        _r_dst.copyTo(_Red, _mask3);
         
         return _Red;
 }

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "robot.h"
 #include "com.h"
+#include <unistd.h>     // sleep()
+#include <iostream>
+#include <sys/sysinfo.h>
 
 #define MODE_MANUAL
 
@@ -20,7 +23,7 @@ void Robot::Init(void){
     //raspberry
     cam1->Open(0);
     //elecom
-    cam2->Open(2);
+    cam2->Open(1);
     bf1=new BallFinder(cam1,5,0,0,0);
     bf2=new BallFinder(cam2,13,0,0,0);
     ChangeCam(now_cam);
@@ -55,6 +58,13 @@ int Robot::Run(void){
         r_value = MainProc();
         state_pre = state;
     #endif
+    /*memory check
+    {
+        struct sysinfo meminfo;
+        ::sysinfo(&meminfo);
+        std::cout << meminfo.freeram <<"/"<< meminfo.totalram <<std::endl;
+    }
+    */
    return r_value;
 }
 
