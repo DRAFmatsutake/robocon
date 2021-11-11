@@ -77,7 +77,7 @@ int BallFinder::SetBallPos(int _x,int _y,int _dis){
         _y*=10;
         _dis*=10;
     if(abs(camera_radian)<0.785){
-        distance=(double)_dis*cos(camera_radian);
+        distance=(double)sqrt(_dis*_dis-height_distance*height_distance);
         double val=(double)_x/distance;
         if(abs(val)>1){
                 return -1;

@@ -13,7 +13,7 @@ Robot::Robot(void){
     state=0;
     state_pre=-1;
     now_cam=CAM_2;
-    cam2_ball_deg_range=15;
+    cam2_ball_deg_range=10;
     cam2_pole_deg_range=10;
     cam1_ball_dist_range=5;
 }
