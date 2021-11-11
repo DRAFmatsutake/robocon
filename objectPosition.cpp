@@ -5,19 +5,20 @@
 //                      ObjectPosition
 //------------------------------------------------------------
 ObjectPosition::ObjectPosition(void){
-    degree=-1;radian=-1;distance=-1;status=-1;
+    degree=-1;radian=-1;distance=-1;
+    status_degree=-1;status_distance=-1;
 }
 int ObjectPosition::GetDegree(int *pvalue){
-    if(status==-1)return 0;
+    if(status_degree==-1)return 0;
     (*pvalue) = (int)(radian/3.14f*180.0f);
     return 1;
 }
 int ObjectPosition::GetDistance(int *pvalue){
-    if(status==-1)return 0;
+    if(status_distance==-1)return 0;
     (*pvalue) = (int)distance;
     return 1;
 }
-void ObjectPosition::Reset(void){status=-1;}
+void ObjectPosition::Reset(void){status_degree=-1;status_distance=-1;}
 ObjectPosition::~ObjectPosition(){}
 //------------------------------------------------------------
 //                      BallPosition
@@ -51,7 +52,7 @@ void BallPosition::Set(int _x,int _y,int _dis){
     __-=camPos.depth;
     distance=sqrt(_*_+__*__);
     radian=atan2(_,__);
-    status = 0;
+    status_degree=0;status_distance=0;
 }
 
 //------------------------------------------------------------
@@ -79,7 +80,21 @@ void HolePosition::SetFlagPos(int _x,int _y,int _dis){
     __-=camPos.depth;
     distance=sqrt(_*_+__*__);
     radian=atan2(_,__);
-    status = 0;
+    status_degree=0;status_distance=0;
+}
+
+//set about angle
+void HolePosition::SetHolePos(int _x,int _y){
+    if(abs(_x)>100){
+        if(_x>0)
+            radian=0.349f;
+        else
+            radian=-0.349f;
+    }
+    else{
+        radian=0;
+    }
+    status_degree=0;
 }
 HolePosition::~HolePosition(){}
 

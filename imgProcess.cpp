@@ -63,10 +63,15 @@ void ImgProcess::Update(void){
     }
 
     //hole search
-    CAM2 = greenfilter(CAM2);
-    cv::cvtColor(CAM2,CAM2,6);
-    threshold(CAM2,CAM2,0,255,THRESH_BINARY);
-    morphologyEx(CAM2,CAM2,MORPH_OPEN,o_element); 
+    int _;
+    if(hp->GetDistance(&_)==0){
+        CAM2 = greenfilter(CAM2);
+        cv::cvtColor(CAM2,CAM2,6);
+        threshold(CAM2,CAM2,0,255,THRESH_BINARY);
+        morphologyEx(CAM2,CAM2,MORPH_OPEN,o_element);
+        if(hole_pos(CAM2,0)!=-1)
+                hp->SetHolePos(_pos.x,_pos.y);
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -249,6 +254,8 @@ int ImgProcess::hole_pos(Mat _CAM,int tmp)
         int width_max;
         
         int nLab = connectedComponentsWithStats(_CAM,lab,l_status,cent);
+        if(nLab-1==0)
+                return -1;
         
         cv::Mat dst_lab(_CAM.size(), CV_8UC3);
         
@@ -273,8 +280,8 @@ int ImgProcess::hole_pos(Mat _CAM,int tmp)
         }
         cv::rectangle(dst_lab, cv::Rect(x_max, y_max, width_max, height_max), cv::Scalar(0, 255, 0), 2);
         
-        _pos.x=x_max;
-        _pos.y=y_max;
+        _pos.x=x_max-320;
+        _pos.y=y_max-240;
         
         return 0;
 }

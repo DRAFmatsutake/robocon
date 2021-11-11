@@ -22,7 +22,8 @@ protected:
     int degree;
     float radian;
     double distance;
-    int status;
+    int status_degree;
+    int status_distance;
 };
 
 //------------------------------------------------------------
@@ -54,6 +55,9 @@ public:
     //camera positon paramater in robot local position
     void SetPramater(CameraPosition camPos);
     void SetFlagPos(int _x,int _y,int _dis);
+    //x and y is pixel size.
+    //because now image process is not get hole distance
+    void SetHolePos(int _x,int _y);
 private:
     int poleHight;
     int poleHeightDiff;
