@@ -6,17 +6,20 @@
 #include <sys/sysinfo.h>
 #include <wiringPi.h>
 
-//#define MODE_DEBUG
+#define MODE_DEBUG
 //#define MODE_MANUAL
+
+//#define BUTTON_START
 
 Robot::Robot(void){
     state=0;
     state_pre=-1;
     now_cam=CAM_2;
-    cam2_ball_deg_range=10;
+    cam2_ball_deg_range=20;
     cam2_pole_deg_range=10;
-    cam1_ball_dist_range=5;
-    debuck=0;
+    cam1_ball_dist_range=1;
+    change_cam_pass=0;
+    //debug=0;  //use debug
 }
 
 Robot::~Robot(){}
@@ -33,11 +36,11 @@ void Robot::Init(void){
         cam2->Open(2);
     
     bp=new BallPosition();
-    pp=new PolePosition();
-    cam1_imgProc=new ImgProcess(cam1,bp,pp,5);
-    cam2_imgProc=new ImgProcess(cam2,bp,pp,13);
-    cam1_imgProc->SetCameraPosition(230,0,69);
-    cam2_imgProc->SetCameraPosition(250,3,29);
+    hp=new HolePosition();
+    cam1_imgProc=new ImgProcess(cam1,bp,hp,5);
+    cam2_imgProc=new ImgProcess(cam2,bp,hp,13);
+    cam1_imgProc->SetCameraPosition(230,0,75);
+    cam2_imgProc->SetCameraPosition(300,3,26);
 
     //bf1=new BallFinder(cam1,5,230,0,70);
     //bf2=new BallFinder(cam2,13,250,3,11);
@@ -46,7 +49,12 @@ void Robot::Init(void){
     moter->Wheel(0,0);
     usleep(300000);
     pinMode(4,INPUT);
-    printf("robot ready\n");
+    printf("robot ready please press button\n");
+    #ifdef BUTTON_START
+        while(digitalRead(4)!=1);
+        sleep(1);
+    #endif
+    printf("program start!!\n");
 }
 void Robot::Deinit(void){
     moter->Update();
@@ -58,7 +66,7 @@ void Robot::Deinit(void){
     delete(cam1_imgProc);
     delete(cam2_imgProc);
     delete(bp);
-    delete(pp);
+    delete(hp);
     //delete(bf1);
     //delete(bf2);
     delete(cam1);
@@ -108,9 +116,11 @@ int Robot::Run(void){
 int Robot::Debug(void){
     imgProc->Update();
     int a=-1,b=-1;
-    bp->GetDegree(&a);
-    bp->GetDistance(&b);
-    printf("%d %d \n",a,b);
+    if(bp->GetDistance(&a)!=0&&bp->GetDegree(&b)!=0)
+        printf("ball  dis:%d deg:%d  ",a,b);
+    if(hp->GetDistance(&a)!=0&&hp->GetDegree(&b)!=0)
+        printf("hole  dis:%d deg:%d  ",a,b);
+    printf("\n");
     //cam->Show("cam");
     return 0;
 }
@@ -172,7 +182,7 @@ void Robot::ChangeCam(int cam_id){
             //bf=bf1;
             imgProc=cam1_imgProc;
             bp->SetPramater(imgProc->GetCameraPosition());
-            pp->SetPramater(imgProc->GetCameraPosition());
+            hp->SetPramater(imgProc->GetCameraPosition());
         break;
     case CAM_2:
             now_cam=cam_id;
@@ -180,7 +190,7 @@ void Robot::ChangeCam(int cam_id){
             //bf=bf2;
             imgProc=cam2_imgProc;
             bp->SetPramater(imgProc->GetCameraPosition());
-            pp->SetPramater(imgProc->GetCameraPosition());
+            hp->SetPramater(imgProc->GetCameraPosition());
         break;
     default:
         break;

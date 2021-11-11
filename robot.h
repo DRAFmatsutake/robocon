@@ -18,7 +18,7 @@ class Robot{
         //
         ImgProcess *imgProc,*cam1_imgProc,*cam2_imgProc;
         BallPosition *bp;
-        PolePosition *pp;
+        HolePosition *hp;
         //BallFinder *bf,*bf1,*bf2;
         int Manual(void);   //manual mode function
         int Debug(void);
@@ -53,6 +53,7 @@ class Robot{
         int cam2_ball_deg_range;
         int cam2_pole_deg_range;
         int cam1_ball_dist_range;
-        int debuck;
+        int change_cam_pass;
+        int debug; //use debugu
 };
 

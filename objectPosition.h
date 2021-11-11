@@ -44,16 +44,18 @@ private:
 };
 
 //------------------------------------------------------------
-//                      PolePosition
+//                      HolePosition
 //------------------------------------------------------------
-class PolePosition:public ObjectPosition
+class HolePosition:public ObjectPosition
 {
 public:
-    PolePosition(void);
-    ~PolePosition();
+    HolePosition(void);
+    ~HolePosition();
     //camera positon paramater in robot local position
     void SetPramater(CameraPosition camPos);
-    int Set(int _x,int _y,int _dis);
+    void SetFlagPos(int _x,int _y,int _dis);
 private:
+    int poleHight;
+    int poleHeightDiff;
     CameraPosition camPos;
 };

@@ -1,5 +1,6 @@
 #include "objectPosition.h"
 #include <math.h>
+#include <stdio.h>
 //------------------------------------------------------------
 //                      ObjectPosition
 //------------------------------------------------------------
@@ -54,14 +55,32 @@ void BallPosition::Set(int _x,int _y,int _dis){
 }
 
 //------------------------------------------------------------
-//                      PolePosition
+//                      HolePosition
 //------------------------------------------------------------
-PolePosition::PolePosition(void){}
-
-void PolePosition::SetPramater(CameraPosition camPos){
-    this->camPos=camPos;
+HolePosition::HolePosition(void){
+    poleHight=400;
 }
 
-PolePosition::~PolePosition(){}
+void HolePosition::SetPramater(CameraPosition camPos){
+    this->camPos=camPos;
+    poleHeightDiff=poleHight-camPos.height;
+}
+void HolePosition::SetFlagPos(int _x,int _y,int _dis){
+    distance=(double)sqrt(_dis*_dis-poleHeightDiff*poleHeightDiff);
+    double val=(double)_x/distance;
+    if(abs(val)>1){
+        return;
+    }
+    radian = (float)asin(val);
+    //hosei
+    int _,__;
+    _=distance*sin(radian);
+    __=distance*cos(radian);
+    __-=camPos.depth;
+    distance=sqrt(_*_+__*__);
+    radian=atan2(_,__);
+    status = 0;
+}
+HolePosition::~HolePosition(){}
 
 
