@@ -5,7 +5,7 @@
 #include "com.h"
 
 //#define MOTER_SET_LOG
-#define MOTER_SERIAL_RECEIVE_LOG
+//#define MOTER_SERIAL_RECEIVE_LOG
 
 Moter::Moter(){
 		//serial connect
@@ -44,23 +44,23 @@ void Moter::TimerStop(){
 
 void Moter::WheelRight(char value){
 	if(timer.State()==0)return;
+	loc_rmoter=value;
 	if(value==rec_rmoter)return;
 	char data[2]={R_MOTER,value};
 	#ifdef MOTER_SET_LOG
 		printf("wheelRight set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
-	loc_rmoter=value;
 }
 void Moter::WheelLeft (char value){
 	if(timer.State()==0)return;
+	loc_lmoter=value;
 	if(value==rec_lmoter)return;
 	char data[2]={L_MOTER,value};
 	#ifdef MOTER_SET_LOG
 		printf("wheelLeft set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
-	loc_lmoter=value;
 }
 
 int Moter::SetArm(char value){
@@ -114,7 +114,7 @@ void Moter::Update(void){
 	if(loc_lmoter!=rec_lmoter)
 		WheelLeft(loc_lmoter);
 	if(loc_rmoter!=rec_rmoter)
-		WheelLeft(loc_rmoter);
+		WheelRight(loc_rmoter);
 
 	//timer
 	timer.Update();

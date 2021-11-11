@@ -4,6 +4,14 @@
 - [ファイル詳細](#ファイル詳細)
 
 # 更新履歴
+<details><summary>2021-11-12  旗検知クラス実装</summary><div>
+
+- imgProcess
+    - 処理の追加
+- objectPosition
+    - pole -> hole に変更 pp => hp となる
+
+</div></details>
 <details><summary>2021-11-11  ボール検知クラスの消去、新実装</summary><div>
 
 - moter
@@ -276,7 +284,7 @@ int Robot::State(void){
 ## 検知
 <table border="1">
     <tr>
-        <td><s>int bp->GetDistance(int* value)<s></td>
+        <td>int bp->GetDistance(int* value)</td>
         <td><details><summary>ボール距離の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[mm]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -287,7 +295,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int bp->GetDegree(int* value)<s></td>
+        <td>int bp->GetDegree(int* value)</td>
         <td><details><summary>ボール方向の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[degree]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -298,7 +306,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int pp->GetDistance(int* value)<s></td>
+        <td><s>int hp->GetDistance(int* value)<s></td>
         <td><details><summary>ポール距離の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[mm]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -309,7 +317,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int pp->GetDegree(int* value)<s></td>
+        <td><s>int hp->GetDegree(int* value)<s></td>
         <td><details><summary>ポール方向の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[degree]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>

@@ -5,7 +5,7 @@
 #include "serial.h"
 #include "com.h"
 
-#define SERIAL_LOG
+//#define SERIAL_LOG
 #ifdef SERIAL_LOG
 //#define SEIAL_REDU_LOG
 #endif
