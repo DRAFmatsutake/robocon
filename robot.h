@@ -1,7 +1,9 @@
 #pragma once
 #include "moter.h"
 #include "camera.h"
-#include "ballFinder.h"
+//#include "ballFinder.h"
+#include "imgProcess.h"
+#include "objectPosition.h"
 
 class Robot{
     public:
@@ -13,7 +15,11 @@ class Robot{
     private:
         Moter *moter;
         Camera *cam,*cam1,*cam2;
-        BallFinder *bf,*bf1,*bf2;
+        //
+        ImgProcess *imgProc,*cam1_imgProc,*cam2_imgProc;
+        BallPosition *bp;
+        PolePosition *pp;
+        //BallFinder *bf,*bf1,*bf2;
         int Manual(void);   //manual mode function
         int Debug(void);
 
@@ -47,5 +53,6 @@ class Robot{
         int cam2_ball_deg_range;
         int cam2_pole_deg_range;
         int cam1_ball_dist_range;
+        int debuck;
 };
 

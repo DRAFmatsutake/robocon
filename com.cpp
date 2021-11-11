@@ -34,17 +34,19 @@ namespace Func{
 Timer::Timer(){
     state=-1;
     counter=0;
-    CLOCKS_PER_MSEC=CLOCKS_PER_SEC/1000;
+    CLOCKS_PER_MSEC=1000;
 }
-void Timer::SetTime(int time){
-    counter=time*CLOCKS_PER_MSEC;
+void Timer::SetTime(int _time){
+    counter=_time*CLOCKS_PER_MSEC;
     state=0;
-    now=clock();
+    gettimeofday(&now,NULL);
 }
 void Timer::Update(){
-    clock_t t=clock();
+    struct timeval t;
+    gettimeofday(&t,NULL);
+    long diff=(t.tv_sec-now.tv_sec)*1000000+(t.tv_usec-now.tv_usec);
     if(state==0){
-        counter-=(int)(t-now);
+        counter-=diff;
         if(counter<=0){
             state=1;}
     }

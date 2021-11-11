@@ -4,6 +4,19 @@
 - [ファイル詳細](#ファイル詳細)
 
 # 更新履歴
+<details><summary>2021-11-11  ボール検知クラスの消去、新実装</summary><div>
+
+- moter
+    - 関数の追加
+- imgProcess
+    - 追加
+- objectPosition
+    - 追加
+- ballFinder
+    - 消去
+    - これに伴い bf,bp => bp,pp となる
+
+</div></details>
 <details><summary>2021-11-10  ボール検知クラスの実装</summary><div>
 
 - ballFinder
@@ -13,7 +26,7 @@
 <details><summary>2021-11-09  ボール検知クラスの事前準備</summary><div>
 
 - ballFinder
-    - がわの実装
+    - 追加
 - リファレンス
     - 関数の参照の追加
 
@@ -21,7 +34,7 @@
 <details><summary>2021-11-08  プログラムのアップデート</summary><div>
 
 - camera
-    - カメラの追加
+    - 追加
 - com
     - define の消去
 
@@ -153,6 +166,14 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
+        <td>bool moter->TimerWheelState(void)</td>
+        <td><details><summary>TimerWheel の動作状況の取得</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>True:動作中 False:非動作<br><br>
+            <b>解説：</b>TimerWheel の動作状況を確認する<br>
+        </details></td>
+    </tr>
+    <tr>
         <td>void moter->WheelStop(void)</td>
         <td><details><summary>モーターを停止させる</summary>
             <b>引数　:</b>無し<br>
@@ -211,6 +232,14 @@ int Robot::State(void){
             アームが持ち上がり切っていない場合等に失敗(0)が返される<br>
         </details></td>
     </tr>
+    <tr>
+        <td>char moter->GetArmDegree(void)</td>
+        <td><details><summary>アームの角度の取得</summary>
+            <b>引数　:</b>無し<br>
+            <b>戻り値:</b>アームの角度<br><br>
+            <b>解説：</b>現在のアームの角度の取得する<br>
+        </details></td>
+    </tr>
 </table>
 
 ## カメラ
@@ -247,7 +276,7 @@ int Robot::State(void){
 ## 検知
 <table border="1">
     <tr>
-        <td><s>int bf->GetDistance(int* value)<s></td>
+        <td><s>int bp->GetDistance(int* value)<s></td>
         <td><details><summary>ボール距離の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[mm]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -258,7 +287,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int bf->GetDegree(int* value)<s></td>
+        <td><s>int bp->GetDegree(int* value)<s></td>
         <td><details><summary>ボール方向の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[degree]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -269,7 +298,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int pf->GetDistance(int* value)<s></td>
+        <td><s>int pp->GetDistance(int* value)<s></td>
         <td><details><summary>ポール距離の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[mm]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -280,7 +309,7 @@ int Robot::State(void){
         </details></td>
     </tr>
     <tr>
-        <td><s>int pf->GetDegree(int* value)<s></td>
+        <td><s>int pp->GetDegree(int* value)<s></td>
         <td><details><summary>ポール方向の取得</summary>
             <b>引数　:</b>value : 変数のポインタ[degree]<br>
             <b>戻り値:</b>成功:1 失敗:0<br><br>
@@ -305,8 +334,12 @@ int Robot::State(void){
     - モーター制御をクラス化したもの
 - serial
     - arduinoとのシリアル通信用
-- serial
+- imgProcess
     - カメラの制御をクラス化したもの
+- objectPosition
+    - 各座標の計算をするもの
+- ballFinder
+    - カメラの制御をクラス化したもの※今後消去予定
 
 
 - _*.out

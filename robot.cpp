@@ -16,6 +16,7 @@ Robot::Robot(void){
     cam2_ball_deg_range=10;
     cam2_pole_deg_range=10;
     cam1_ball_dist_range=5;
+    debuck=0;
 }
 
 Robot::~Robot(){}
@@ -30,19 +31,36 @@ void Robot::Init(void){
     //elecom
     if(cam2->Open(1)==-1)
         cam2->Open(2);
-    bf1=new BallFinder(cam1,5,230,0,70);
-    bf2=new BallFinder(cam2,13,250,3,11);
+    
+    bp=new BallPosition();
+    pp=new PolePosition();
+    cam1_imgProc=new ImgProcess(cam1,bp,pp,5);
+    cam2_imgProc=new ImgProcess(cam2,bp,pp,13);
+    cam1_imgProc->SetCameraPosition(230,0,69);
+    cam2_imgProc->SetCameraPosition(250,3,29);
+
+    //bf1=new BallFinder(cam1,5,230,0,70);
+    //bf2=new BallFinder(cam2,13,250,3,11);
     ChangeCam(now_cam);
+    moter->Update();
     moter->Wheel(0,0);
+    usleep(300000);
     pinMode(4,INPUT);
     printf("robot ready\n");
 }
 void Robot::Deinit(void){
-    moter->Wheel(0,0);
+    moter->Update();
+    moter->TimerStop();
+    moter->WheelStop();
+    usleep(300000);
     printf("\nrobot deinit\n");
     delete(moter);
-    delete(bf1);
-    delete(bf2);
+    delete(cam1_imgProc);
+    delete(cam2_imgProc);
+    delete(bp);
+    delete(pp);
+    //delete(bf1);
+    //delete(bf2);
     delete(cam1);
     delete(cam2);
 }
@@ -55,8 +73,8 @@ int Robot::Setup(){
 
 int Robot::Run(void){
     int r_value = 0;
-    moter->Update();
     cam->Update();
+    moter->Update();
 
     #ifdef MODE_DEBUG
         Debug();
@@ -69,7 +87,8 @@ int Robot::Run(void){
     #endif
     #ifndef MODE_MANUAL
     #ifndef MODE_DEBUG
-        bf->Update();
+        //bf->Update();
+        imgProc->Update();
         r_value = MainProc();
         state_pre = state;
     #endif
@@ -87,10 +106,10 @@ int Robot::Run(void){
 }
 
 int Robot::Debug(void){
-    bf->Update();
+    imgProc->Update();
     int a=-1,b=-1;
-    bf->GetDegree(&a);
-    bf->GetDistance(&b);
+    bp->GetDegree(&a);
+    bp->GetDistance(&b);
     printf("%d %d \n",a,b);
     //cam->Show("cam");
     return 0;
@@ -150,12 +169,18 @@ void Robot::ChangeCam(int cam_id){
     case CAM_1:
             now_cam=cam_id;
             cam=cam1;
-            bf=bf1;
+            //bf=bf1;
+            imgProc=cam1_imgProc;
+            bp->SetPramater(imgProc->GetCameraPosition());
+            pp->SetPramater(imgProc->GetCameraPosition());
         break;
     case CAM_2:
             now_cam=cam_id;
             cam=cam2;
-            bf=bf2;
+            //bf=bf2;
+            imgProc=cam2_imgProc;
+            bp->SetPramater(imgProc->GetCameraPosition());
+            pp->SetPramater(imgProc->GetCameraPosition());
         break;
     default:
         break;

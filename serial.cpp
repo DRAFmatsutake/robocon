@@ -5,7 +5,10 @@
 #include "serial.h"
 #include "com.h"
 
-//#define SERIAL_LOG
+#define SERIAL_LOG
+#ifdef SERIAL_LOG
+//#define SEIAL_REDU_LOG
+#endif
 
 Serial::Serial(
 			int sendDataSize_,
@@ -58,7 +61,7 @@ void Serial::Send(char *data){
 	if(fd<0)
 		return;
 	serialPutchar(fd,header);
-		#ifdef SERIAL_LOG
+		#ifdef SEIAL_REDU_LOG
 			printf("send:%x ",header);
 		#endif
 	for(int i=0;i<sendDataSize;i++){
@@ -72,8 +75,11 @@ void Serial::Send(char *data){
 		#endif
 	}
 	serialPutchar(fd,footer);
+	#ifdef SERIAL_REDU_LOG
+		printf("%x",footer);
+	#endif
 	#ifdef SERIAL_LOG
-		printf("%x\n",footer);;
+		printf("\n");
 	#endif
 }
 
@@ -137,7 +143,7 @@ void Serial::Update(void){
 		return;
 	while(0!=serialDataAvail(fd)){
 		c=serialGetchar(fd);
-		#ifdef SERIAL_LOG
+		#ifdef SERIAL_REDU_LOG
 			printf("[%x %d]",c,dataCount);
 		#endif
 		if(c==header){
@@ -145,7 +151,7 @@ void Serial::Update(void){
 		}
 		else if(c==footer){
 			if(dataCount==dataBuffSize){
-				#ifdef SERIAL_LOG
+				#ifdef SERIAL_REDU_LOG
 					printf("success get signal\n");
 				#endif
 				RingAddData();

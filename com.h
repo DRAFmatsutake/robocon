@@ -1,4 +1,5 @@
 #pragma once
+#include "sys/time.h"
 
 namespace Func{
 	//no wait key input
@@ -22,6 +23,6 @@ class Timer{
 	private:
 		int state;
 		long counter;
-		long now;
+		struct timeval now;
 		int CLOCKS_PER_MSEC;
 };

@@ -18,6 +18,8 @@ class Moter{
 			//value -127 ~ 127,time[ms]
 			// can't execute other wheel when to end wheel moveing
 			void TimerWheel(char left,char right,int time);
+			//state of timerwheel
+			bool TimerWheelState(void);
 			//cancel TimerWheel
 			void TimerStop();
 			//value -127 ~ 127
@@ -35,8 +37,8 @@ class Moter{
 			//--------------------------
 			//		get
 			//--------------------------
-			//int GetWheelSpeed(char *left,char*right);
-			//int GetArmPower(char *value);
+			//get arm degree
+			char GetArmDegree(void);
 		private:
 			Serial *sr;
 			const char R_MOTER	= 0b00000010;
@@ -44,6 +46,11 @@ class Moter{
 			const char SETARM	= 0b00000011;
 			const char SHOOT	= 0b00000100;
 			Timer timer;
+
+			//local data
+			char loc_rmoter;
+			char loc_lmoter;
+			char loc_arm_angre;
 
 			//receive data
 			char rec_rmoter;

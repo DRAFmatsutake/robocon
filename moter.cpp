@@ -5,7 +5,7 @@
 #include "com.h"
 
 //#define MOTER_SET_LOG
-//#define MOTER_SERIAL_RECEIVE_LOG
+#define MOTER_SERIAL_RECEIVE_LOG
 
 Moter::Moter(){
 		//serial connect
@@ -31,6 +31,13 @@ void Moter::TimerWheel(char left,char right,int time){
 	timer.SetTime(time);
 }
 
+bool Moter::TimerWheelState(void){
+	if(timer.State()==-1)
+		return false;
+	else
+		return true;
+}
+
 void Moter::TimerStop(){
 	timer.DropFlug();
 }
@@ -43,6 +50,7 @@ void Moter::WheelRight(char value){
 		printf("wheelRight set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
+	loc_rmoter=value;
 }
 void Moter::WheelLeft (char value){
 	if(timer.State()==0)return;
@@ -52,6 +60,7 @@ void Moter::WheelLeft (char value){
 		printf("wheelLeft set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
+	loc_lmoter=value;
 }
 
 int Moter::SetArm(char value){
@@ -62,6 +71,7 @@ int Moter::SetArm(char value){
 		printf("arm set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
+	loc_arm_angre=value;
 	return 1;
 }
 
@@ -75,6 +85,12 @@ int Moter::ArmShot(void){
 	#endif
 	sr->Send(data);
 	return 1;
+}
+
+
+//get arm degree
+char Moter::GetArmDegree(void){
+	return rec_arm_angre;
 }
 
 void Moter::Update(void){
@@ -95,6 +111,10 @@ void Moter::Update(void){
 			#endif
 		}
 	}
+	if(loc_lmoter!=rec_lmoter)
+		WheelLeft(loc_lmoter);
+	if(loc_rmoter!=rec_rmoter)
+		WheelLeft(loc_rmoter);
 
 	//timer
 	timer.Update();
