@@ -322,6 +322,7 @@ int Robot::State(void){
 </table>
 
 # ファイル詳細
+## 主なファイル
 - main.cpp
     - メイン処理
 - main_proc.cpp
@@ -342,8 +343,7 @@ int Robot::State(void){
     - カメラの制御をクラス化したもの※今後消去予定
 
 
-- _*.out
-    - コンパイルされた実行ファイル
+## その他のファイル
 - makefile
     - コンパイル設定ファイル
 - test_*.cpp
