@@ -10,12 +10,12 @@ ImgProcess::ImgProcess(Camera *pc,BallPosition *bp,HolePosition *hp,int paramete
     //HSV filter
     {
         //HSV red filter 1
-        int H_MAX =   5,H_MIN =  0;
+        int H_MAX =   3,H_MIN =  0;
         int S_MAX = 255,S_MIN = 50;
         int V_MAX = 255,V_MIN = 50;
 
         //HSV red filter 2
-        int H_MAX2 = 179,H_MIN2 = 170;
+        int H_MAX2 = 179,H_MIN2 = 175;
 
         s_min2 = cv::Scalar(H_MIN2, S_MIN, V_MIN);
         s_max2 = cv::Scalar(H_MAX2, S_MAX, V_MAX);

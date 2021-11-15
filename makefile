@@ -13,3 +13,7 @@ moter: test_moter.cpp com.cpp serial.cpp moter.cpp
 camera: test_camera.cpp camera.cpp
 	g++ -o _camera.out test_camera.cpp camera.cpp com.cpp \
 	-I /usr/include/opencv4 -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_videoio
+
+camedit: _edit_camera_param.cpp
+	g++ -o _camedit.out _edit_camera_param.cpp \
+	-I /usr/include/opencv4 -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_videoio -lopencv_imgproc
