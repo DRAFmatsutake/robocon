@@ -45,7 +45,7 @@ ImgProcess::~ImgProcess()
 void ImgProcess::Update(void){
     bp->Reset();
     hp->Reset();
-    CAM1=(pc->frame).clone();
+    CAM1=pc->GetClone();
     CAM2=CAM1.clone();
 
     //ball flag search

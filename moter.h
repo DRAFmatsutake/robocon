@@ -44,7 +44,7 @@ class Moter{
 		private:
 			Serial *sr;
 			void SerialReceive(void);
-			char AddCharValue(char a,char b);
+			char AddCharValue(char value,char addvalue);
 			//value -127 ~ 127
 			void _WheelRight(char value);
 			//value -127 ~ 127

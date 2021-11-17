@@ -1,15 +1,29 @@
 #include "camera.h"
 
-Camera::Camera(){}
+Camera::Camera(){
+	loop=false;
+	state=0;
+}
 Camera::~Camera(){
-	printf("disconnect camera\n");
 	Close();
+	printf("disconnected camera\n");
+}
+
+cv::Mat Camera::GetClone(){
+	mtx.lock();
+	_frame=frame.clone();
+	mtx.unlock();
+	return _frame;
 }
 
 int Camera::Open(int device){
+	if(state==1){
+		printf("this camera instance is already opened\n");
+	}
 	cam.open(device);
 	if (!cam.isOpened()){
 		printf("camera is undifinded.(device: %d )\n",device);
+		state= 0;
         return -1;
     }
 	//camera resize
@@ -23,15 +37,28 @@ int Camera::Open(int device){
 	//cam.set(cv::CAP_PROP_EXPOSURE,1000);
 	cam.set(cv::CAP_PROP_FPS,30);
 	printf("camera open success(device: %d )\n",device);
+	state=1;
+	loop=true;
+	th=std::thread(&Camera::cam_thread,this);
 	return 0;
 }
 
 void Camera::Update(){
-	cam.read(frame);
+}
+void Camera::cam_thread(){
+	printf("start cam thead\n");
+	while(loop){
+		if(cam.grab()){
+			mtx.lock();
+			cam.retrieve(frame);
+			mtx.unlock();
+		}
+	}
+	printf("end cam thead\n");
 }
 
 void Camera::Show(const char *windowName){
-	cv::imshow(windowName, frame);        
+	cv::imshow(windowName, GetClone());        
 	cv::waitKey (5);
 }
 
@@ -43,9 +70,14 @@ void Camera::Capture(){
 
 void Camera::Capture(const char *path){
 	printf("capture img\n");
-	imwrite(path,frame);
+	imwrite(path,GetClone());
 }
 
 void Camera::Close(){
-	cam.release();
+	if(state==1){
+		loop=false;
+		state=0;
+		th.join();
+		cam.release();
+	}
 }

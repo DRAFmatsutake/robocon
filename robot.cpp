@@ -6,15 +6,15 @@
 #include <sys/sysinfo.h>
 #include <wiringPi.h>
 
-//#define MODE_DEBUG
+#define MODE_DEBUG
 //#define MODE_MANUAL
 
-#define BUTTON_START
+//#define BUTTON_START
 
 Robot::Robot(void){
     state=0;
     state_pre=-1;
-    now_cam=CAM_2;
+    now_cam=CAM_1;
     count=0;
     pole_cam_skip=0;
     preparation=0;
@@ -49,8 +49,6 @@ void Robot::Init(void){
     cam1_imgProc->SetCameraPosition(230,-40,77);
     cam2_imgProc->SetCameraPosition(300,3,26);
 
-    //bf1=new BallFinder(cam1,5,230,0,70);
-    //bf2=new BallFinder(cam2,13,250,3,11);
     ChangeCam(now_cam);
     moter->Update();
     moter->PowerSync(0,0);
@@ -89,7 +87,6 @@ int Robot::Setup(){
 
 int Robot::Run(void){
     int r_value = 0;
-    cam->Update();
     #ifndef MODE_MANUAL
     #ifndef MODE_DEBUG
         imgProc->Update();

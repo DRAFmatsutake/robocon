@@ -51,47 +51,40 @@ void Moter::TimerStop(){
 	timer.DropFlug();
 }
 
-char Moter::AddCharValue(char a,char b){
-	int _a=a,_b=b;
-	if(_a>128)_a=_a-256;
-	if(_b>128)_b=_b-256;
-	int ans=_a+_b;
-	ans=(ans>128)?128:ans;
+char Moter::AddCharValue(char value,char addvalue){
+	if(value==0x00)return value;
+	if(value==0x80)return value;
+	int _a=value,_b=addvalue;
+	if(_a>127)_a=_a-256;
+	if(_b>127)_b=_b-256;
+	int ans=_a+((_a>0)?(_b):(-_b));
+	ans=(ans>127)?127:ans;
 	ans=(ans<-127)?-127:ans;
 	return (char)ans;
-	}
-
+}
 void Moter::WheelRight(char value){
-	//value=AddCharValue(value,rparam);
 	if(timer.State()==0)return;
 	loc_rmoter=value;
 	if(value==rec_rmoter)return;
-	char data[2]={R_MOTER,value};
-	#ifdef MOTER_SET_LOG
-		printf("wheelRight set:%x %x\n",data[0],data[1]);
-	#endif
-	sr->Send(data);
+	_WheelRight(value);
 }
 void Moter::_WheelRight(char value){
-	//value=AddCharValue(value,rparam);
+	value=AddCharValue(value,rparam);
 	char data[2]={R_MOTER,value};
 	#ifdef MOTER_SET_LOG
 		printf("_wheelRight set:%x %x\n",data[0],data[1]);
 	#endif
 	sr->Send(data);
 }
+
 void Moter::WheelLeft (char value){
-	//value=AddCharValue(value,lparam);
 	if(timer.State()==0)return;
 	loc_lmoter=value;
 	if(value==rec_lmoter)return;
-	char data[2]={L_MOTER,value};
-	#ifdef MOTER_SET_LOG
-		printf("wheelLeft set:%x %x\n",data[0],data[1]);
-	#endif
-	sr->Send(data);
-}void Moter::_WheelLeft (char value){
-	//value=AddCharValue(value,lparam);
+	_WheelLeft (value);
+}
+void Moter::_WheelLeft (char value){
+	value=AddCharValue(value,lparam);
 	char data[2]={L_MOTER,value};
 	#ifdef MOTER_SET_LOG
 		printf("_wheelLeft set:%x %x\n",data[0],data[1]);
@@ -156,8 +149,6 @@ void Moter::SerialReceive(void){
 void Moter::Update(void){
 	SerialReceive();
 	int _counter=0;
-		//printf("%d -> %d    ",rec_lmoter,loc_lmoter);
-		//printf("%d -> %d    \n",rec_rmoter,loc_rmoter);
 	while(_counter<100&&(loc_lmoter!=rec_lmoter||loc_rmoter!=rec_rmoter)){
 		if(loc_lmoter!=rec_lmoter)
 			_WheelLeft(loc_lmoter);
@@ -166,11 +157,7 @@ void Moter::Update(void){
 		usleep(5000);
 		SerialReceive();
 		_counter++;
-		//printf("%d -> %d    ",rec_lmoter,loc_lmoter);
-		//printf("%d -> %d    \n",rec_rmoter,loc_rmoter);
 	}
-	//if(_counter==100)
-	//	printf("wheel send data count over\n");
 
 	//timer
 	timer.Update();

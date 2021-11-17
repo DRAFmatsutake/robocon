@@ -4,10 +4,9 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio/videoio.hpp>
 
-/*g++ -o _camera.out test_camera.cpp camera.cpp com.cpp -std=c++11
-// -I /usr/include/opencv4 	-lopencv_core -lopencv_imgcodecs 
-//							-lopencv_highgui -lopencv_videoio
-*/
+#include <thread>
+#include <mutex>
+
 class Camera{
 	public:
 		Camera();
@@ -18,8 +17,15 @@ class Camera{
 		void Update();
 		void Capture();
 		void Capture(const char *path);
-		cv::Mat frame;
+		cv::Mat GetClone();
 		
-	private:	
+	private:
+		void cam_thread();
 		cv::VideoCapture cam;
+		std::thread th;
+		bool loop;
+		int state;
+		cv::Mat frame;
+		cv::Mat _frame;
+		std::mutex mtx;
 };

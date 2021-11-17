@@ -73,8 +73,6 @@ void HolePosition::SetPramater(CameraPosition camPos){
     poleHeightDiff=poleHight-camPos.height;
 }
 void HolePosition::SetFlagPos(int _x,int _y,int _dis){
-    //if(_dis>5000)
-    //    return;
     distance=(double)sqrt(_dis*_dis-poleHeightDiff*poleHeightDiff);
     double val=(double)_x/distance;
     if(abs(val)>1){
